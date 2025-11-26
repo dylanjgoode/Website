@@ -31,6 +31,7 @@ try {
 const chatModel = new ChatOpenAI({
     openAIApiKey: process.env.OPENAI_API_KEY,
     modelName: "gpt-5-mini", // or gpt-4
+    streaming: true,
 });
 
 app.post('/api/chat', async (req, res) => {
@@ -41,23 +42,37 @@ app.post('/api/chat', async (req, res) => {
     }
 
     try {
-        const systemPrompt = `You are a helpful and professional AI assistant for RGC Technologies. 
+        const systemPrompt = `You are a helpful and professional AI assistant for RGC Technologies.
     Use the following information about the company to answer the user's questions.
     If the answer is not in the information provided, politely ask the user to contact us directly at info@rgc.ie or +353 1663 6999.
     Keep your answers concise and friendly.
-    
+
+    IMPORTANT: Format your response using Markdown. Use bullet points, bold text, and headers where appropriate to make the information easy to read.
+
     Company Information:
     ${knowledgeBase}`;
 
-        const response = await chatModel.invoke([
+        res.setHeader('Content-Type', 'text/plain');
+        res.setHeader('Transfer-Encoding', 'chunked');
+
+        const stream = await chatModel.stream([
             new SystemMessage(systemPrompt),
             new HumanMessage(message),
         ]);
 
-        res.json({ reply: response.content });
+        for await (const chunk of stream) {
+            res.write(chunk.content);
+        }
+
+        res.end();
+
     } catch (error) {
         console.error('Error processing chat:', error);
-        res.status(500).json({ error: 'Internal server error' });
+        if (!res.headersSent) {
+            res.status(500).json({ error: 'Internal server error' });
+        } else {
+            res.end();
+        }
     }
 });
 

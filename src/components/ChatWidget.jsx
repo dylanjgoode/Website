@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { MessageCircle, X, Send, Bot, User } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
 
 const ChatWidget = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -40,13 +41,32 @@ const ChatWidget = () => {
                 body: JSON.stringify({ message: input }),
             });
 
-            const data = await response.json();
-            const botMessage = { text: data.reply, sender: 'bot' };
+            if (!response.body) throw new Error('ReadableStream not supported.');
+
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
+            let botMessage = { text: '', sender: 'bot' };
+
             setMessages(prev => [...prev, botMessage]);
+            setIsLoading(false); // Stop loading indicator as soon as stream starts
+
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+
+                const chunk = decoder.decode(value, { stream: true });
+                botMessage.text += chunk;
+
+                setMessages(prev => {
+                    const newMessages = [...prev];
+                    newMessages[newMessages.length - 1] = { ...botMessage };
+                    return newMessages;
+                });
+            }
+
         } catch (error) {
             console.error('Error sending message:', error);
             setMessages(prev => [...prev, { text: "Sorry, I'm having trouble connecting to the server.", sender: 'bot' }]);
-        } finally {
             setIsLoading(false);
         }
     };
@@ -74,8 +94,23 @@ const ChatWidget = () => {
                                 backgroundColor: msg.sender === 'user' ? 'var(--primary-color)' : '#f1f1f1',
                                 color: msg.sender === 'user' ? 'white' : 'black',
                             }}>
-                                {msg.sender === 'bot' && <Bot size={16} style={{ marginRight: '8px' }} />}
-                                {msg.text}
+                                {msg.sender === 'bot' && <Bot size={16} style={{ marginRight: '8px', marginTop: '4px', flexShrink: 0 }} />}
+                                <div style={styles.messageContent}>
+                                    {msg.sender === 'bot' ? (
+                                        <ReactMarkdown
+                                            components={{
+                                                p: ({ node, ...props }) => <p style={{ margin: '0 0 8px 0', lastChild: { marginBottom: 0 } }} {...props} />,
+                                                ul: ({ node, ...props }) => <ul style={{ margin: '0 0 8px 0', paddingLeft: '20px' }} {...props} />,
+                                                li: ({ node, ...props }) => <li style={{ marginBottom: '4px' }} {...props} />,
+                                                strong: ({ node, ...props }) => <strong style={{ fontWeight: '600' }} {...props} />,
+                                            }}
+                                        >
+                                            {msg.text}
+                                        </ReactMarkdown>
+                                    ) : (
+                                        msg.text
+                                    )}
+                                </div>
                             </div>
                         ))}
                         {isLoading && (
@@ -135,7 +170,7 @@ const styles = {
         transition: 'transform 0.2s',
     },
     window: {
-        width: '350px',
+        width: '437px', // Increased by ~25% from 350px
         height: '500px',
         backgroundColor: 'white',
         borderRadius: '12px',
@@ -175,13 +210,16 @@ const styles = {
         gap: '0.8rem',
     },
     message: {
-        maxWidth: '80%',
+        maxWidth: '85%',
         padding: '0.8rem',
         borderRadius: '12px',
         fontSize: '0.9rem',
         lineHeight: '1.4',
         display: 'flex',
-        alignItems: 'center',
+        alignItems: 'flex-start',
+    },
+    messageContent: {
+        wordBreak: 'break-word',
     },
     inputArea: {
         padding: '1rem',
