@@ -6,6 +6,7 @@ import Savings from './components/Savings';
 import WhyChooseUs from './components/WhyChooseUs';
 import News from './components/News';
 import Footer from './components/Footer';
+import ChatWidget from './components/ChatWidget';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <News />
       </main>
       <Footer />
+      <ChatWidget />
     </div>
   );
 }

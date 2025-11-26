@@ -1,0 +1,59 @@
+RGC Technologies - Company Overview
+RGC Technologies Limited is an Irish company that provides elite Computerised Maintenance Management System (CMMS) solutions.
+Our flagship product is the RGC Enterprise System, also known as JOBPAL.
+We empower organisations worldwide to achieve unparalleled excellence in maintenance and asset management.
+
+Contact Information:
+Phone: +353 1663 6999
+Email: info@rgc.ie
+Location: Designed and developed in Ireland.
+
+Key Products & Services:
+1. RGC Enterprise System (CMMS / CAFM):
+   - A comprehensive system to streamline maintenance operations.
+   - Gives clients full visibility of activities to maximise ROI and minimise unexpected downtime.
+   - Supports multiple companies on one database.
+
+2. Mobile App for Engineers:
+   - Allows field and internal staff to pro-actively manage tasks in real-time.
+
+3. Asset & Facilities Management:
+   - Allocate and manage jobs to ensure assets are tracked and facilities remain operational.
+
+4. Preventative and Reactive Maintenance:
+   - Maximise ROI by managing uptime and minimising costly downtime.
+   - Supports Planned, Preventative and Predictive (PPM) maintenance scheduling.
+
+5. Stock Control:
+   - Optimise supply chain with visibility of inventory and stock across multiple sites and warehouses.
+
+6. Project Management:
+   - Manage projects, cost estimates, timescales, and progress from one system.
+
+7. Reporting:
+   - Reporting tool provides visibility of key information to manage the business.
+
+Specialization Areas:
+- CMMS Asset Management and CAFM Facilities Management
+- Planned, Preventative and Predictive (PPM) Maintenance scheduling
+- Field Service Management
+- Purchasing and Supplier Management
+- Customer Management, Work In Progress (WIP), Quotations and Billing
+- Food, Packing and Renewable Energy sectors
+
+Benefits / ROI:
+- Achieve between 12% to 18% savings on maintenance and operations budget.
+- Maximise uptime of assets (generating revenue).
+- Reduce costly downtime.
+- Increase life cycle of assets.
+- Optimise stock levels (only stock what is required).
+
+Partnerships:
+- RGC is a partner of DPD Ireland.
+- Michael Kelly, Head of Central Operations for DPD Ireland, uses RGC CMMS to support maintenance operations.
+- DPD Ireland saw significant growth (730,000 parcels/week during lockdown) and relies on RGC to maximise uptime and deliver outstanding customer experience.
+
+Why Choose Us:
+- Flexible and integrated suite of modules.
+- Replaces multiple systems, spreadsheets, and paperwork.
+- Consolidates business processes into one system.
