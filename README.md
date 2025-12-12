@@ -7,7 +7,7 @@ A modern, responsive website for RGC Technologies, showcasing their CMMS (Comput
 - **Icons**: Lucide React
 - **Styling**: Vanilla CSS with custom design system
 
-## 📋 Features
+## 📋 Features - 
 
 - **Modern Design**: Premium UI with custom color palette and typography
 - **Responsive Layout**: Optimized for all device sizes
