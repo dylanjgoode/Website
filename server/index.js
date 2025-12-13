@@ -4,9 +4,9 @@ import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { ChatOpenAI } from "@langchain/openai";
-import { HumanMessage, SystemMessage } from "@langchain/core/messages";
+import OpenAI from 'openai';
 
+// Initialize Chat Model
 dotenv.config({ path: path.resolve(process.cwd(), '.env'), override: true });
 
 const __filename = fileURLToPath(import.meta.url);
@@ -28,11 +28,7 @@ try {
 }
 
 // Initialize Chat Model
-const chatModel = new ChatOpenAI({
-    openAIApiKey: process.env.OPENAI_API_KEY,
-    modelName: "gpt-5-mini", // or gpt-4
-    streaming: true,
-});
+const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 app.post('/api/chat', async (req, res) => {
     const { message } = req.body;
@@ -52,27 +48,16 @@ app.post('/api/chat', async (req, res) => {
     Company Information:
     ${knowledgeBase}`;
 
-        res.setHeader('Content-Type', 'text/plain');
-        res.setHeader('Transfer-Encoding', 'chunked');
+        const resp = await client.responses.create({
+            model: "gpt-5-mini",
+            input: `${systemPrompt}\n\nUser Question: ${message}`
+        });
 
-        const stream = await chatModel.stream([
-            new SystemMessage(systemPrompt),
-            new HumanMessage(message),
-        ]);
-
-        for await (const chunk of stream) {
-            res.write(chunk.content);
-        }
-
-        res.end();
+        res.json({ text: resp.output_text });
 
     } catch (error) {
         console.error('Error processing chat:', error);
-        if (!res.headersSent) {
-            res.status(500).json({ error: 'Internal server error' });
-        } else {
-            res.end();
-        }
+        res.status(500).json({ error: 'Internal server error' });
     }
 });
 

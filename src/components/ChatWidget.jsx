@@ -41,32 +41,14 @@ const ChatWidget = () => {
                 body: JSON.stringify({ message: input }),
             });
 
-            if (!response.body) throw new Error('ReadableStream not supported.');
+            const data = await response.json();
 
-            const reader = response.body.getReader();
-            const decoder = new TextDecoder();
-            let botMessage = { text: '', sender: 'bot' };
-
-            setMessages(prev => [...prev, botMessage]);
-            setIsLoading(false); // Stop loading indicator as soon as stream starts
-
-            while (true) {
-                const { done, value } = await reader.read();
-                if (done) break;
-
-                const chunk = decoder.decode(value, { stream: true });
-                botMessage.text += chunk;
-
-                setMessages(prev => {
-                    const newMessages = [...prev];
-                    newMessages[newMessages.length - 1] = { ...botMessage };
-                    return newMessages;
-                });
-            }
+            setMessages(prev => [...prev, { text: data.text, sender: 'bot' }]);
 
         } catch (error) {
             console.error('Error sending message:', error);
             setMessages(prev => [...prev, { text: "Sorry, I'm having trouble connecting to the server.", sender: 'bot' }]);
+        } finally {
             setIsLoading(false);
         }
     };
